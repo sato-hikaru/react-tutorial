@@ -12,13 +12,13 @@ export default class Game extends React.Component {
       }],
       stepNumber: 0,
       xIsNext: true,
-      squareCount: 9,
+      orderByAsc: true,
     };
   }
 
   handleClick(i) {
     const history = this.state.history.slice(0, this.state.stepNumber + 1);
-    const current = history[history.length - 1]
+    const current = history.slice().pop();
     const squares = current.squares.slice();
     const col = i % 3 + 1;
     const row = Math.ceil((i + 1) / 3);
@@ -43,11 +43,18 @@ export default class Game extends React.Component {
     });
   }
 
+  toggleOrder() {
+    this.setState({
+      orderByAsc: !this.state.orderByAsc,
+    });
+  }
+
   render() {
     const history = this.state.history;
     const current = history[this.state.stepNumber];
     const winner = calculateWinner(current.squares);
     const stepNumber = this.state.stepNumber;
+    const orderByAsc = this.state.orderByAsc;
 
     const moves = history.map((step, move) => {
       const desc = move ?
@@ -79,7 +86,8 @@ export default class Game extends React.Component {
         </div>
         <div className="game-info">
           <div>{status}</div>
-          <ol>{moves}</ol>
+          <button onClick={() => this.toggleOrder()}>Order by {orderByAsc ? 'asc' : 'desc'}</button>
+          <ol>{orderByAsc ? moves : moves.reverse()}</ol>
         </div>
       </div>
     );
