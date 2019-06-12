@@ -2,22 +2,25 @@ import React from 'react';
 import Square from './square';
 
 export default class Board extends React.Component {
-  renderSquare(i) {
+  renderSquare(i, highlight) {
     return (<Square
       value={this.props.squares[i]}
       onClick={() => this.props.onClick(i)}
       key={i}
+      highlight={highlight}
     />);
   }
 
   render() {
     const size = 3;
     const rows = [];
+    const highlightLine = this.props.highlightLine || [];
 
     for (let i = 0; i < size; i++) {
-      let columns = [];
+      const columns = [];
       for (let j = 0; j < size; j++) {
-        columns[j] = this.renderSquare(j + i * size);
+        const index = j + i * size;
+        columns[j] = this.renderSquare(index, index === highlightLine[j]);
       }
       rows.push(<div key={i} className="board-row">{columns}</div>);
     }

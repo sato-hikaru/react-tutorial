@@ -9,6 +9,7 @@ export default class Game extends React.Component {
       history: [{
         squares: Array(9).fill(null),
         location: { col: null, row: null },
+        highlightLine: [],
       }],
       stepNumber: 0,
       xIsNext: true,
@@ -30,6 +31,7 @@ export default class Game extends React.Component {
       history: history.concat([{
         squares: squares,
         location: { col, row },
+        highlightLine: calculateWinner(squares),
       }]),
       stepNumber: history.length,
       xIsNext: !this.state.xIsNext,
@@ -82,12 +84,13 @@ export default class Game extends React.Component {
           <Board
             squares={current.squares}
             onClick={(i) => this.handleClick(i)}
+            highlightLine={current.highlightLine}
           />
         </div>
         <div className="game-info">
           <div>{status}</div>
-          <button onClick={() => this.toggleOrder()}>Order by {orderByAsc ? 'asc' : 'desc'}</button>
           <ol>{orderByAsc ? moves : moves.reverse()}</ol>
+          <button onClick={() => this.toggleOrder()}>Order by {orderByAsc ? 'asc' : 'desc'}</button>
         </div>
       </div>
     );
