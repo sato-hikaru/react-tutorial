@@ -74,6 +74,8 @@ export default class Game extends React.Component {
     let status;
     if (winner) {
       status = 'Winner: ' + (!this.state.xIsNext ? 'X' : 'O');
+    } else if (history.length === 10) {
+      status = 'This game is a draw.'
     } else {
       status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
     }
