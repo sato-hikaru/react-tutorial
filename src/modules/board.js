@@ -20,7 +20,8 @@ export default class Board extends React.Component {
       const columns = [];
       for (let j = 0; j < size; j++) {
         const index = j + i * size;
-        columns[j] = this.renderSquare(index, index === highlightLine[j]);
+        const highlight = highlightLine.includes(index);
+        columns[j] = this.renderSquare(index, highlight);
       }
       rows.push(<div key={i} className="board-row">{columns}</div>);
     }

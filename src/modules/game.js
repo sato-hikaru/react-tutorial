@@ -9,7 +9,6 @@ export default class Game extends React.Component {
       history: [{
         squares: Array(9).fill(null),
         location: { col: null, row: null },
-        highlightLine: [],
       }],
       stepNumber: 0,
       xIsNext: true,
@@ -23,7 +22,7 @@ export default class Game extends React.Component {
     const squares = current.squares.slice();
     const col = i % 3 + 1;
     const row = Math.ceil((i + 1) / 3);
-    if (calculateWinner(squares) || squares[i]) {
+    if (calculateWinner(squares).winner || squares[i]) {
       return;
     }
     squares[i] = this.state.xIsNext ? 'X' : 'O';
@@ -31,7 +30,6 @@ export default class Game extends React.Component {
       history: history.concat([{
         squares: squares,
         location: { col, row },
-        highlightLine: calculateWinner(squares),
       }]),
       stepNumber: history.length,
       xIsNext: !this.state.xIsNext,
@@ -54,7 +52,9 @@ export default class Game extends React.Component {
   render() {
     const history = this.state.history;
     const current = history[this.state.stepNumber];
-    const winner = calculateWinner(current.squares);
+    const calcResult = calculateWinner(current.squares);
+    const winner = calcResult.winner;
+    const highlightLine = calcResult.line;
     const stepNumber = this.state.stepNumber;
     const orderByAsc = this.state.orderByAsc;
 
@@ -73,9 +73,7 @@ export default class Game extends React.Component {
 
     let status;
     if (winner) {
-      status = 'Winner: ' + (!this.state.xIsNext ? 'X' : 'O');
-    } else if (history.length === 10) {
-      status = 'This game is a draw.'
+      status = 'Winner: ' + winner
     } else {
       status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
     }
@@ -86,7 +84,7 @@ export default class Game extends React.Component {
           <Board
             squares={current.squares}
             onClick={(i) => this.handleClick(i)}
-            highlightLine={current.highlightLine}
+            highlightLine={highlightLine}
           />
         </div>
         <div className="game-info">
